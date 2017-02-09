@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_player"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.marcosvbras.kiwiiplayer.app.activity.PlayerActivity">
+
+    <LinearLayout
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_weight="3"
+        android:layout_height="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/image_view_cover"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="10"/>
+            <TextView
+                android:id="@+id/text_view_title"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/text_view_artist"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp">
+
+        <ImageButton
+            android:id="@+id/imagebutton_previous"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="@drawable/circular_button"
+            android:layout_width="70dp"
+            android:layout_height="70dp" />
+
+        <ImageButton
+            android:id="@+id/imagebutton_play"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:src="@drawable/white_play_128"
+            android:background="@drawable/circular_button"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+
+        <ImageButton
+            android:id="@+id/imagebutton_next"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="@drawable/circular_button"
+            android:layout_width="70dp"
+            android:layout_height="70dp" />
+    </LinearLayout>
+</LinearLayout>

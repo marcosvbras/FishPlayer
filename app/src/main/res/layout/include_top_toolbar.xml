@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/top_toolbar"
+    android:layout_height="?attr/actionBarSize"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:layout_alignParentLeft="true"
+    android:elevation="4dp"
+    android:background="@color/colorPrimary"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+<!--
+    scroll: Indica que a view deve fazer a rolagem. As views que não tiverem essa flag
+            permanecerão no mesmo local.
+    enterAlways: Quando a view não está visível por causa da rolagem, essa flag permite
+            que um simples gesto de rolagem para cima faça a view aparecer novamente,
+            padrão conhecido como retorno rápido (quick return).
+    enterAlwaysCollapsed: Parecido com a enterAlways, mas aqui a view somente volta
+            a aparecer quando a rolagem retorna ao topo
+    exitUntilCollapsed: Faz com que a view desapareça da tela caso a rolagem tenha passado
+            da altura mínima da view (minHeight).
+-->
