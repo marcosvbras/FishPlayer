@@ -1,4 +1,4 @@
-package com.marcosvbras.kiwiiplayer;
+package com.marcosvbras.fishplayer;
 
 import org.junit.Test;
 

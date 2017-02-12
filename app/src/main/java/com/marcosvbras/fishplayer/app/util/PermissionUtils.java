@@ -1,4 +1,4 @@
-package com.marcosvbras.kiwiiplayer.app.util;
+package com.marcosvbras.fishplayer.app.util;
 
 import android.Manifest;
 import android.app.Activity;

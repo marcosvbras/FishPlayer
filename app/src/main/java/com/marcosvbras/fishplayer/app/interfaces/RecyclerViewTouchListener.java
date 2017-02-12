@@ -1,4 +1,4 @@
-package com.marcosvbras.kiwiiplayer.app.interfaces;
+package com.marcosvbras.fishplayer.app.interfaces;
 
 import android.view.View;
 

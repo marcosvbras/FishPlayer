@@ -1,4 +1,4 @@
-package com.marcosvbras.kiwiiplayer.app.adapter;
+package com.marcosvbras.fishplayer.app.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marcosvbras.kiwiiplayer.R;
-import com.marcosvbras.kiwiiplayer.app.domain.Music;
+import com.marcosvbras.fishplayer.R;
+import com.marcosvbras.fishplayer.app.domain.Music;
 
 import java.util.List;
 
