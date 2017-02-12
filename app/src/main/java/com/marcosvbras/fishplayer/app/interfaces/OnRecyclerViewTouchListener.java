@@ -6,7 +6,7 @@ import android.view.View;
  * Created by marcos on 25/12/2016.
  */
 
-public interface RecyclerViewTouchListener {
+public interface OnRecyclerViewTouchListener {
     public void onItemClickListener(View view, int position);
     public void onLongItemClickListener(View view, int position);
 }

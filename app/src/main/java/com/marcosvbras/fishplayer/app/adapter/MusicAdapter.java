@@ -16,28 +16,26 @@ import java.util.List;
  * Created by marcosvbras on 07/02/17.
  */
 
-public class PlayListAdapter extends RecyclerView.Adapter {
+public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder> {
 
     private Context context;
     private List<Music> listMusic;
 
-    public PlayListAdapter(Context context, List<Music> listMusic) {
+    public MusicAdapter(Context context, List<Music> listMusic) {
         this.context = context;
         this.listMusic = listMusic;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_playlist, parent, false);
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_music, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        MyViewHolder myViewHolder = (MyViewHolder)viewHolder;
+    public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         Music music = listMusic.get(position);
-
         myViewHolder.textViewTitle.setText(music.getTitle());
         myViewHolder.textViewArtist.setText(music.getArtist());
     }
@@ -51,7 +49,7 @@ public class PlayListAdapter extends RecyclerView.Adapter {
         return listMusic.get(index);
     }
 
-    private class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle;
         TextView textViewArtist;
 

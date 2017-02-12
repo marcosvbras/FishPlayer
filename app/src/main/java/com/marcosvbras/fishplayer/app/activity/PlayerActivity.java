@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marcosvbras.fishplayer.R;
 import com.marcosvbras.fishplayer.app.FishApplication;
@@ -192,13 +191,13 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         textViewArtist.setText(text);
 
         // Image cover
-        if(music.getCoverPath() == null || music.getCoverPath().equals("")) {
+        if(music.getAlbumArtPath() == null || music.getAlbumArtPath().equals("")) {
             imageViewCover.setImageResource(R.drawable.white_music_448);
         } else {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final Bitmap bitmap = BitmapFactory.decodeFile(music.getCoverPath());
+                    final Bitmap bitmap = BitmapFactory.decodeFile(music.getAlbumArtPath());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

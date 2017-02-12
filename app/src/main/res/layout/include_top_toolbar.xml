@@ -10,7 +10,8 @@
     android:elevation="4dp"
     android:background="@color/colorPrimary"
     android:theme="@style/AppTheme.AppBarOverlay"
-    app:popupTheme="@style/AppTheme.PopupOverlay" />
+    app:popupTheme="@style/AppTheme.PopupOverlay"
+    app:layout_scrollFlags="scroll|enterAlways"/>
 
 <!--
     scroll: Indica que a view deve fazer a rolagem. As views que não tiverem essa flag

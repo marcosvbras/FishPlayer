@@ -10,6 +10,7 @@ import android.os.Parcelable;
 public class Music implements Parcelable {
 
     private long albumId;
+    private long artistId;
     private long dataAdded; // in seconds
     private long dataModified;
     private long id;
@@ -20,7 +21,7 @@ public class Music implements Parcelable {
     private String album;
     private String artist;
     private String composer;
-    private String coverPath;
+    private String albumArtPath;
     private String fileName;
     private String mimeType;
     private String musicPath;
@@ -43,6 +44,14 @@ public class Music implements Parcelable {
 
     public void setAlbumId(long albumId) {
         this.albumId = albumId;
+    }
+
+    public long getArtistId() {
+        return artistId;
+    }
+
+    public void setArtistId(long artistId) {
+        this.artistId = artistId;
     }
 
     public long getDataAdded() {
@@ -125,12 +134,12 @@ public class Music implements Parcelable {
         this.composer = composer;
     }
 
-    public String getCoverPath() {
-        return coverPath;
+    public String getAlbumArtPath() {
+        return albumArtPath;
     }
 
-    public void setCoverPath(String coverPath) {
-        this.coverPath = coverPath;
+    public void setAlbumArtPath(String albumArtPath) {
+        this.albumArtPath = albumArtPath;
     }
 
     public String getFileName() {
@@ -223,6 +232,7 @@ public class Music implements Parcelable {
 
     protected Music(Parcel in) {
         albumId = in.readLong();
+        artistId = in.readLong();
         dataAdded = in.readLong();
         dataModified = in.readLong();
         id = in.readLong();
@@ -233,7 +243,7 @@ public class Music implements Parcelable {
         album = in.readString();
         artist = in.readString();
         composer = in.readString();
-        coverPath = in.readString();
+        albumArtPath = in.readString();
         fileName = in.readString();
         mimeType = in.readString();
         musicPath = in.readString();
@@ -253,6 +263,7 @@ public class Music implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(albumId);
+        dest.writeLong(artistId);
         dest.writeLong(dataAdded);
         dest.writeLong(dataModified);
         dest.writeLong(id);
@@ -263,7 +274,7 @@ public class Music implements Parcelable {
         dest.writeString(album);
         dest.writeString(artist);
         dest.writeString(composer);
-        dest.writeString(coverPath);
+        dest.writeString(albumArtPath);
         dest.writeString(fileName);
         dest.writeString(mimeType);
         dest.writeString(musicPath);

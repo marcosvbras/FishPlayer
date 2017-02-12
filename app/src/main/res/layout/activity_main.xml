@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.marcosvbras.fishplayer.app.activity.MainActivity">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/include_top_toolbar"/>
-
-    <FrameLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/text_view_message"
-            android:textSize="16sp"
-            android:visibility="gone"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:scrollbars="vertical"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <include layout="@layout/include_top_toolbar" />
+
+        <com.marcosvbras.fishplayer.app.view.SlidingTabLayout
+            android:id="@+id/sliding_tab_layout"
+            android:elevation="4dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
-</LinearLayout>
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <!--android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="#fff000" /-->
+
+</android.support.design.widget.CoordinatorLayout>
+

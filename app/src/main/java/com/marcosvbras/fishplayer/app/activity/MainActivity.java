@@ -1,107 +1,64 @@
 package com.marcosvbras.fishplayer.app.activity;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.marcosvbras.fishplayer.R;
-import com.marcosvbras.fishplayer.app.FishApplication;
-import com.marcosvbras.fishplayer.app.adapter.PlayListAdapter;
-import com.marcosvbras.fishplayer.app.domain.Music;
-import com.marcosvbras.fishplayer.app.interfaces.RecyclerViewTouchListener;
-import com.marcosvbras.fishplayer.app.listener.RecyclerItemClickListener;
-import com.marcosvbras.fishplayer.app.util.Constants;
-import com.marcosvbras.fishplayer.app.util.MusicHelper;
-import com.marcosvbras.fishplayer.app.util.PermissionUtils;
+import com.marcosvbras.fishplayer.app.adapter.TabsAdapter;
+import com.marcosvbras.fishplayer.app.fragments.AlbumsFragment;
+import com.marcosvbras.fishplayer.app.fragments.ArtistsFragment;
+import com.marcosvbras.fishplayer.app.fragments.MusicsFragment;
+import com.marcosvbras.fishplayer.app.fragments.PlaylistsFragment;
+import com.marcosvbras.fishplayer.app.view.SlidingTabLayout;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewTouchListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
 
     // Views
-    private RecyclerView recyclerView;
+    private SlidingTabLayout slidingTabLayout;
+    private ViewPager viewPager;
 
-    // Another objects
-    private PlayListAdapter playListAdapter;
-    private ProgressBar progressBar;
+    // Another Objects
+    private List<String> listTitles;
+    private List<Fragment> listFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        populateLists();
         loadComponents();
-        loadMusicList();
+    }
+
+    private void populateLists() {
+        listTitles = new ArrayList<>();
+        listTitles.add(getString(R.string.musics));
+        listTitles.add(getString(R.string.artists));
+        listTitles.add(getString(R.string.albuns));
+        listTitles.add(getString(R.string.playlists));
+
+        listFragments = new ArrayList<>();
+        listFragments.add(new MusicsFragment());
+        listFragments.add(new ArtistsFragment());
+        listFragments.add(new AlbumsFragment());
+        listFragments.add(new PlaylistsFragment());
     }
 
     private void loadComponents() {
         setSupportActionBar((Toolbar)findViewById(R.id.top_toolbar));
-        recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
-    }
-
-    private void loadMusicList() {
-        String[] permissoes = new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE };
-        PermissionUtils.validate(this, 0, permissoes);
-
-        if(PermissionUtils.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            final Activity activity = this;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    FishApplication.listMusic = MusicHelper.discoverSongs(activity);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showList();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                }
-            }).start();
-        } else {
-            // Solicita as permissões
-            PermissionUtils.validate(this, 0, permissoes);
-        }
-    }
-
-    private void showList() {
-        if(FishApplication.listMusic != null && FishApplication.listMusic.size() > 0) {
-            playListAdapter = new PlayListAdapter(this, FishApplication.listMusic);
-            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
-            recyclerView.setAdapter(playListAdapter);
-        } else {
-            ((TextView)findViewById(R.id.text_view_message)).setText(getString(R.string.no_music_found));
-            findViewById(R.id.text_view_message).setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onItemClickListener(View view, int position) {
-        Music music = playListAdapter.getMusicAt(position);
-        FishApplication.currentMusicIndex = position;
-        Intent intent = new Intent(this, PlayerActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_MUSIC, music);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onLongItemClickListener(View view, int position) {
-
+        slidingTabLayout = (SlidingTabLayout)findViewById(R.id.sliding_tab_layout);
+        viewPager = (ViewPager)findViewById(R.id.view_pager);
+        viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), listFragments, listTitles));
+        slidingTabLayout.setDistributeEvenly(false);
+        slidingTabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        slidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.colorAccent), ContextCompat.getColor(this, R.color.colorAccent));
+        slidingTabLayout.setTitleColor(ContextCompat.getColor(this, android.R.color.white));
+        slidingTabLayout.setViewPager(viewPager);
     }
 }
