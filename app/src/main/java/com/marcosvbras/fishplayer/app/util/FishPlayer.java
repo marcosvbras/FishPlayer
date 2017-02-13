@@ -81,6 +81,7 @@ public class FishPlayer {
 
     public void close() {
         stop();
+        musicProgressRunnable.pause();
         musicProgressRunnable = null;
         mediaPlayer.release();
         mediaPlayer = null;

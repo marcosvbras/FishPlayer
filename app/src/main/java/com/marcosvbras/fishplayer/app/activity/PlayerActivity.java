@@ -3,12 +3,16 @@ package com.marcosvbras.fishplayer.app.activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -20,6 +24,8 @@ import com.marcosvbras.fishplayer.app.domain.Music;
 import com.marcosvbras.fishplayer.app.interfaces.OnMusicProgressChangeListener;
 import com.marcosvbras.fishplayer.app.util.Constants;
 import com.marcosvbras.fishplayer.app.util.FishPlayer;
+import com.marcosvbras.fishplayer.app.util.ImageHelper;
+import com.marcosvbras.fishplayer.app.view.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,12 +43,14 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     private TextView textViewArtist;
     private TextView textViewDurationProgress;
     private TextView textViewDurationLength;
-    private ImageView imageViewCover;
+    private ImageView imageViewLp;
     private SeekBar seekBar;
+    private RoundedImageView roundedImageView;
 
     // Another objects
     private FishPlayer fishPlayer;
     private Music music;
+    private RotateAnimation rotateAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +71,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         fishPlayer = new FishPlayer(this);
         fishPlayer.setOnCompletionListener(this);
         fishPlayer.setOnMusicProgressChangeListener(this);
+        rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(this, R.anim.rotate_relative_to_self);
     }
 
     private void loadComponents() {
@@ -80,7 +89,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         textViewArtist = (TextView)findViewById(R.id.text_view_artist);
         textViewDurationProgress = (TextView)findViewById(R.id.text_view_duration_progress);
         textViewDurationLength = (TextView)findViewById(R.id.text_view_duration_length);
-        imageViewCover = (ImageView)findViewById(R.id.image_view_cover);
+        imageViewLp = (ImageView)findViewById(R.id.image_view_lp);
+        roundedImageView = (RoundedImageView)findViewById(R.id.rounded_image_view);
         seekBar = (SeekBar)findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(onSeekBarChangeListener());
 
@@ -192,16 +202,16 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
 
         // Image cover
         if(music.getAlbumArtPath() == null || music.getAlbumArtPath().equals("")) {
-            imageViewCover.setImageResource(R.drawable.white_music_448);
         } else {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final Bitmap bitmap = BitmapFactory.decodeFile(music.getAlbumArtPath());
+                    final Bitmap bitmap = ImageHelper.resizeBitmap(
+                            BitmapFactory.decodeFile(music.getAlbumArtPath()), 127);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            imageViewCover.setImageBitmap(bitmap);
+                            roundedImageView.setImageBitmap(bitmap);
                         }
                     });
                 }
@@ -277,9 +287,11 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if(fishPlayer.isPlaying()) {
             imageButtonPlay.setImageResource(R.drawable.white_play_250);
             fishPlayer.pause();
+            roundedImageView.getAnimation().cancel();
         } else {
             imageButtonPlay.setImageResource(R.drawable.white_pause_250);
             fishPlayer.play(music.getMusicPath());
+            roundedImageView.startAnimation(rotateAnimation);
         }
     }
 
@@ -320,6 +332,5 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     protected void onDestroy() {
         super.onDestroy();
         fishPlayer.close();
-        FishApplication.currentMusicIndex = -1;
     }
 }

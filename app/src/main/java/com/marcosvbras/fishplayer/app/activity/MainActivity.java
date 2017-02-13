@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         listTitles = new ArrayList<>();
         listTitles.add(getString(R.string.musics));
         listTitles.add(getString(R.string.artists));
-        listTitles.add(getString(R.string.albuns));
+        listTitles.add(getString(R.string.albums));
         listTitles.add(getString(R.string.playlists));
 
         listFragments = new ArrayList<>();
