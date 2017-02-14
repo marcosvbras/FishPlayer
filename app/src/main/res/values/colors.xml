@@ -3,6 +3,7 @@
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>
     <color name="colorAccent">#000000</color>
+    <color name="transparentTile">#66000000</color>
     <color name="pressedBlackColor">#333333</color>
     <color name="gradientStartColor">#ff2d9a59</color>
     <color name="gradientCenterColor">#ff42959a</color>

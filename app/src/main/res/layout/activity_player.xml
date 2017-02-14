@@ -28,15 +28,16 @@
                 <ImageView
                     android:id="@+id/image_view_lp"
                     android:src="@drawable/white_lp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_gravity="center"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp" />
                 <com.marcosvbras.fishplayer.app.view.RoundedImageView
                     android:id="@+id/rounded_image_view"
+                    android:visibility="invisible"
                     android:layout_marginTop="4dp"
                     android:layout_gravity="center"
-                    android:layout_width="130dp"
-                    android:layout_height="127dp" />
+                    android:layout_width="240dp"
+                    android:layout_height="240dp" />
             </FrameLayout>
             <TextView
                 android:id="@+id/text_view_title"
@@ -61,6 +62,7 @@
                 android:layout_height="wrap_content" />
         </RelativeLayout>
     </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

@@ -93,7 +93,7 @@ public class ArtistsFragment extends Fragment implements OnRecyclerViewTouchList
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, this));
             recyclerView.setAdapter(artistAdapter);
         } else {
-            ((TextView)getView().findViewById(R.id.text_view_message)).setText(getString(R.string.no_music_found));
+            ((TextView)getView().findViewById(R.id.text_view_message)).setText(getString(R.string.no_artist_found));
             getView().findViewById(R.id.text_view_message).setVisibility(View.VISIBLE);
         }
     }

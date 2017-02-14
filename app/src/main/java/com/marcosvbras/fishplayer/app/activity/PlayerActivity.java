@@ -287,11 +287,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if(fishPlayer.isPlaying()) {
             imageButtonPlay.setImageResource(R.drawable.white_play_250);
             fishPlayer.pause();
-            roundedImageView.getAnimation().cancel();
+            findViewById(R.id.frame_layout_music).getAnimation().cancel();
+            imageViewLp.getAnimation().cancel();
         } else {
             imageButtonPlay.setImageResource(R.drawable.white_pause_250);
             fishPlayer.play(music.getMusicPath());
-            roundedImageView.startAnimation(rotateAnimation);
+            imageViewLp.startAnimation(rotateAnimation);
         }
     }
 

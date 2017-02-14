@@ -51,6 +51,7 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
         recyclerView = (RecyclerView)getView().findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, this));
         progressBar = (ProgressBar)getView().findViewById(R.id.progress_bar);
         loadMusicList();
     }
@@ -89,7 +90,6 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
     private void showList() {
         if(FishApplication.listMusic != null && FishApplication.listMusic.size() > 0) {
             musicAdapter = new MusicAdapter(getActivity(), FishApplication.listMusic);
-            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, this));
             recyclerView.setAdapter(musicAdapter);
         } else {
             ((TextView)getView().findViewById(R.id.text_view_message)).setText(getString(R.string.no_music_found));

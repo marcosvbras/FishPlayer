@@ -148,7 +148,7 @@ public class MusicHelper {
             if(cursorAlbum.moveToFirst()) {
                 do {
                     Album album = new Album();
-                    album.setId(cursorAlbum.getInt(cursorAlbum.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ID)));
+                    album.setId(cursorAlbum.getInt(cursorAlbum.getColumnIndex(MediaStore.Audio.Albums._ID)));
                     album.setName(cursorAlbum.getString(cursorAlbum.getColumnIndex(MediaStore.Audio.Albums.ALBUM)));
                     album.setArtist(cursorAlbum.getString(cursorAlbum.getColumnIndex(MediaStore.Audio.Albums.ARTIST)));
                     album.setFirstYear(cursorAlbum.getInt(cursorAlbum.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR)));
@@ -164,5 +164,70 @@ public class MusicHelper {
         }
 
         return listAlbums;
+    }
+
+    public static List<Music> loadListByAlbumId(Activity context, long albumId, String orderByColumn) {
+        List<Music> listMusics = new ArrayList<>();
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursorMusic = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+                MediaStore.Audio.Media.ALBUM_ID + " = ?", new String[] { String.valueOf(albumId) }, orderByColumn);
+
+        if(cursorMusic != null) {
+            if(cursorMusic.moveToFirst()) {
+                // Get columns
+                int dataColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.DATA);
+                int titleColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.TITLE);
+                int idColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media._ID);
+                int artistColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+                int albumIdColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
+                int songDuration = cursorMusic.getColumnIndex(MediaStore.Audio.Media.DURATION);
+                int composerColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.COMPOSER);
+                int dateAddedColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
+                int dateModifiedColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED);
+                int yearColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.YEAR);
+                int sizeColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.SIZE);
+                int fileNameColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME);
+                int albumColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.ALBUM);
+                int isAlarmColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.IS_ALARM);
+                int isMusicColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC);
+                int isNotificationColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.IS_NOTIFICATION);
+                int isPodcastColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.IS_PODCAST);
+                int isRingtoneColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.IS_RINGTONE);
+                int trackNumberColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.TRACK);
+                int mimeTypeColumn = cursorMusic.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
+
+                // Add songs to list
+                do {
+                    Music music = new Music();
+                    music.setMusicPath(cursorMusic.getString(dataColumn));
+                    music.setId(cursorMusic.getLong(idColumn));
+                    music.setAlbumId(cursorMusic.getLong(albumIdColumn));
+                    music.setTitle(cursorMusic.getString(titleColumn));
+                    music.setArtist(cursorMusic.getString(artistColumn));
+                    music.setDuration(Integer.parseInt(cursorMusic.getString(songDuration)));
+                    music.setComposer(cursorMusic.getString(composerColumn));
+                    music.setDataAdded(cursorMusic.getLong(dateAddedColumn));
+                    music.setDataModified(cursorMusic.getLong(dateModifiedColumn));
+                    music.setYear(cursorMusic.getInt(yearColumn));
+                    music.setSizeFile(cursorMusic.getLong(sizeColumn));
+                    music.setFileName(cursorMusic.getString(fileNameColumn));
+                    music.setAlbum(cursorMusic.getString(albumColumn));
+                    music.setAlarm(cursorMusic.getInt(isAlarmColumn) == 1 ? true : false);
+                    music.setMusic(cursorMusic.getInt(isMusicColumn) == 1 ? true : false);
+                    music.setNotification(cursorMusic.getInt(isNotificationColumn) == 1 ? true : false);
+                    music.setPodcast(cursorMusic.getInt(isPodcastColumn) == 1 ? true : false);
+                    music.setRingtone(cursorMusic.getInt(isRingtoneColumn) == 1 ? true : false);
+                    music.setTrackNumber(cursorMusic.getInt(trackNumberColumn));
+                    music.setMimeType(cursorMusic.getString(mimeTypeColumn));
+                    music.setAlbumArtPath(MusicHelper.getAlbumArt(context, music.getAlbumId()));
+
+                    listMusics.add(music);
+                } while (cursorMusic.moveToNext());
+            }
+            cursorMusic.close();
+            cursorMusic = null;
+        }
+
+        return listMusics;
     }
 }
