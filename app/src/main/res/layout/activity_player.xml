@@ -20,31 +20,17 @@
             android:layout_height="match_parent"
             android:padding="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
-            <FrameLayout
-                android:id="@+id/frame_layout_music"
+            <ImageView
+                android:id="@+id/image_view_art"
                 android:layout_centerHorizontal="true"
-                android:layout_width="250dp"
-                android:layout_height="250dp">
-                <ImageView
-                    android:id="@+id/image_view_lp"
-                    android:src="@drawable/white_lp"
-                    android:layout_gravity="center"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp" />
-                <com.marcosvbras.fishplayer.app.view.RoundedImageView
-                    android:id="@+id/rounded_image_view"
-                    android:visibility="invisible"
-                    android:layout_marginTop="4dp"
-                    android:layout_gravity="center"
-                    android:layout_width="240dp"
-                    android:layout_height="240dp" />
-            </FrameLayout>
+                android:layout_width="280dp"
+                android:layout_height="280dp" />
             <TextView
                 android:id="@+id/text_view_title"
                 android:gravity="center"
                 android:text="Title"
                 android:maxLines="1"
-                android:layout_below="@+id/frame_layout_music"
+                android:layout_below="@+id/image_view_art"
                 android:textSize="20sp"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:textColor="@android:color/white"

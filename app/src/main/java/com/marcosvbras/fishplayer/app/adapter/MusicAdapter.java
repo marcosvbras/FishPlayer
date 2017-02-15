@@ -56,7 +56,7 @@ public class MusicAdapter extends RecyclerView.Adapter {
                     @Override
                     public void run() {
                         final Bitmap bitmap = ImageHelper.resizeBitmap(
-                                BitmapFactory.decodeFile(music.getAlbumArtPath()),
+                                BitmapFactory.decodeByteArray(music.getFilePicture(), 0, music.getFilePicture().length),
                                 140);
                         hashMapImage.put(position, bitmap);
                         activity.runOnUiThread(new Runnable() {

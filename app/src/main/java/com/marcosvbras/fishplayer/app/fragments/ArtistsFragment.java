@@ -88,7 +88,7 @@ public class ArtistsFragment extends Fragment implements OnRecyclerViewTouchList
     }
 
     private void showList() {
-        if(FishApplication.listMusic != null && FishApplication.listMusic.size() > 0) {
+        if(listArtist != null && listArtist.size() > 0) {
             artistAdapter = new ArtistAdapter(listArtist, getActivity());
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, this));
             recyclerView.setAdapter(artistAdapter);

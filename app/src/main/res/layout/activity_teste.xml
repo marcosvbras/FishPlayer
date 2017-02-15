@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_teste"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    tools:context="com.marcosvbras.fishplayer.app.activity.TesteActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+        <ImageView
+            android:id="@+id/teste"
+            android:src="@drawable/white_lp"
+            android:layout_gravity="center"
+            android:layout_width="250dp"
+            android:layout_height="250dp" />
+        <!--ImageView
+            android:id="@+id/imageViewRodar"
+            android:src="@drawable/white_lp_2"
+            android:layout_gravity="center"
+            android:layout_width="230dp"
+            android:layout_height="230dp" /-->
+        <com.marcosvbras.fishplayer.app.view.RoundedImageView
+            android:id="@+id/rounded_image_view"
+            android:src="@drawable/brand_new_eyes_cover"
+            android:scaleType="matrix"
+            android:layout_marginTop="4dp"
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+    </FrameLayout>
+</LinearLayout>

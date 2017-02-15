@@ -3,11 +3,13 @@ package com.marcosvbras.fishplayer.app.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,15 +18,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marcosvbras.fishplayer.R;
+import com.marcosvbras.fishplayer.app.FishApplication;
 import com.marcosvbras.fishplayer.app.adapter.MusicAdapter;
 import com.marcosvbras.fishplayer.app.domain.Album;
 import com.marcosvbras.fishplayer.app.domain.Music;
 import com.marcosvbras.fishplayer.app.fragments.AlbumsFragment;
 import com.marcosvbras.fishplayer.app.interfaces.OnRecyclerViewTouchListener;
 import com.marcosvbras.fishplayer.app.listener.RecyclerItemClickListener;
+import com.marcosvbras.fishplayer.app.util.Constants;
 import com.marcosvbras.fishplayer.app.util.MusicHelper;
 import com.marcosvbras.fishplayer.app.util.PermissionUtils;
 
@@ -36,6 +41,8 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private ImageView imageView;
+    private FloatingActionButton floatingActionButton;
+    private TextView textViewArtist;
 
     // Another Objects
     private Album album;
@@ -61,6 +68,25 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
+        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab_play);
+        floatingActionButton.setOnClickListener(onPlayButtonClick());
+        textViewArtist = (TextView)findViewById(R.id.text_view_artist);
+    }
+
+    private View.OnClickListener onPlayButtonClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Music music = musicAdapter.getMusicAt(0);
+                FishApplication.currentListMusic = listMusics;
+                FishApplication.currentMusicIndex = 0;
+                Intent intent = new Intent(getBaseContext(), PlayerActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(Constants.KEY_MUSIC, music);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        };
     }
 
     @Override
@@ -69,7 +95,17 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
 
         if(getIntent().getExtras().getParcelable(AlbumsFragment.KEY) != null) {
             album = getIntent().getExtras().getParcelable(AlbumsFragment.KEY);
-            getSupportActionBar().setTitle(album.getName());
+
+            if(album.getName() != null && !album.getName().equals("") && !album.getName().equals("0"))
+                getSupportActionBar().setTitle(album.getName());
+            else
+                getSupportActionBar().setTitle(getString(R.string.unknown_album));
+
+            if(album.getArtist() != null && !album.getArtist().equals("") && !album.getArtist().equals("0"))
+                textViewArtist.setText(album.getArtist());
+            else
+                textViewArtist.setText(getString(R.string.unknown_artist));
+
             loadAlbumArt();
             loadMusics();
         }
@@ -106,8 +142,7 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
                             //progressBar.setVisibility(View.VISIBLE);
                         }
                     });
-                    listMusics = MusicHelper.loadListByAlbumId(context, album.getId(), MediaStore.Audio.Albums.ALBUM);
-//                    listMusics = MusicHelper.discoverSongs(context, MediaStore.Audio.Albums.ALBUM);
+                    listMusics = MusicHelper.loadListByAlbumId(context, album.getId(), MediaStore.Audio.Media.TITLE);
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -132,7 +167,14 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
 
     @Override
     public void onItemClickListener(View view, int position) {
-
+        Music music = musicAdapter.getMusicAt(position);
+        FishApplication.currentListMusic = listMusics;
+        FishApplication.currentMusicIndex = position;
+        Intent intent = new Intent(this, PlayerActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.KEY_MUSIC, music);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     @Override

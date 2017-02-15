@@ -26,6 +26,8 @@ import com.marcosvbras.fishplayer.app.util.Constants;
 import com.marcosvbras.fishplayer.app.util.MusicHelper;
 import com.marcosvbras.fishplayer.app.util.PermissionUtils;
 
+import java.util.List;
+
 /**
  * Created by marcosvbras on 12/02/17.
  */
@@ -38,6 +40,7 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
     // Another objects
     private MusicAdapter musicAdapter;
     private ProgressBar progressBar;
+    private List<Music> listMusic;
 
     @Nullable
     @Override
@@ -71,7 +74,7 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
                             progressBar.setVisibility(View.VISIBLE);
                         }
                     });
-                    FishApplication.listMusic = MusicHelper.discoverSongs(activity, MediaStore.Audio.Media.TITLE);
+                    listMusic = MusicHelper.discoverSongs(activity, MediaStore.Audio.Media.TITLE);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -88,8 +91,8 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
     }
 
     private void showList() {
-        if(FishApplication.listMusic != null && FishApplication.listMusic.size() > 0) {
-            musicAdapter = new MusicAdapter(getActivity(), FishApplication.listMusic);
+        if(listMusic != null && listMusic.size() > 0) {
+            musicAdapter = new MusicAdapter(getActivity(), listMusic);
             recyclerView.setAdapter(musicAdapter);
         } else {
             ((TextView)getView().findViewById(R.id.text_view_message)).setText(getString(R.string.no_music_found));
@@ -100,6 +103,7 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
     @Override
     public void onItemClickListener(View view, int position) {
         Music music = musicAdapter.getMusicAt(position);
+        FishApplication.currentListMusic = listMusic;
         FishApplication.currentMusicIndex = position;
         Intent intent = new Intent(getContext(), PlayerActivity.class);
         Bundle bundle = new Bundle();

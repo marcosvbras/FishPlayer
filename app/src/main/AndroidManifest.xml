@@ -15,11 +15,11 @@
         <activity android:name=".app.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".app.activity.AlbumActivity"></activity>
+        <activity android:name=".app.activity.AlbumActivity" />
+        <activity android:name=".app.activity.TesteActivity"/>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.marcosvbras.fishplayer.app.domain;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -31,6 +32,9 @@ public class Music implements Parcelable {
     private boolean isNotification;
     private boolean isPodcast;
     private boolean isRingtone;
+    private byte[] filePicture;
+
+    //BitmapFactory.decodeByteArray(data, 0, data.length)
 
     public Music() { }
 
@@ -214,6 +218,14 @@ public class Music implements Parcelable {
         isRingtone = ringtone;
     }
 
+    public byte[] getFilePicture() {
+        return filePicture;
+    }
+
+    public void setFilePicture(byte[] filePicture) {
+        this.filePicture = filePicture;
+    }
+
     /**
      * Parcelable
      * */
@@ -253,6 +265,8 @@ public class Music implements Parcelable {
         isNotification = in.readInt() == 1 ? true : false;
         isPodcast = in.readInt() == 1 ? true : false;
         isRingtone = in.readInt() == 1 ? true : false;
+        filePicture = new byte[in.readInt()];
+        in.readByteArray(filePicture);
     }
 
     @Override
@@ -284,5 +298,7 @@ public class Music implements Parcelable {
         dest.writeInt(isNotification ? 1 : 0);
         dest.writeInt(isPodcast ? 1 : 0);
         dest.writeInt(isRingtone ? 1 : 0);
+        dest.writeInt(filePicture.length);
+        dest.writeByteArray(filePicture);
     }
 }

@@ -12,20 +12,14 @@ import java.util.List;
 
 public class FishApplication extends Application {
 
-    private static FishApplication instance;
-
-    public static FishApplication getInstance() { return instance; }
-
     public static List<Music> oldListMusic;
-    public static List<Music> listMusic;
+    public static List<Music> currentListMusic;
 
     public static int currentMusicIndex;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
-        currentMusicIndex = -1;
     }
 
     @Override

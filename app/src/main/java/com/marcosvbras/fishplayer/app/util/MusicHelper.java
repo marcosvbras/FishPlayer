@@ -3,8 +3,12 @@ package com.marcosvbras.fishplayer.app.util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.marcosvbras.fishplayer.app.domain.Album;
 import com.marcosvbras.fishplayer.app.domain.Artist;
@@ -75,6 +79,7 @@ public class MusicHelper {
                     music.setTrackNumber(cursorMusic.getInt(trackNumberColumn));
                     music.setMimeType(cursorMusic.getString(mimeTypeColumn));
                     music.setAlbumArtPath(MusicHelper.getAlbumArt(context, music.getAlbumId()));
+                    music.setFilePicture(getSpecificFilePicture(music.getMusicPath()));
 
                     listMusic.add(music);
                 } while (cursorMusic.moveToNext());
@@ -220,7 +225,7 @@ public class MusicHelper {
                     music.setTrackNumber(cursorMusic.getInt(trackNumberColumn));
                     music.setMimeType(cursorMusic.getString(mimeTypeColumn));
                     music.setAlbumArtPath(MusicHelper.getAlbumArt(context, music.getAlbumId()));
-
+                    music.setFilePicture(getSpecificFilePicture(music.getMusicPath()));
                     listMusics.add(music);
                 } while (cursorMusic.moveToNext());
             }
@@ -229,5 +234,11 @@ public class MusicHelper {
         }
 
         return listMusics;
+    }
+
+    public static byte[] getSpecificFilePicture(String musicPath) {
+        MediaMetadataRetriever mediaMetaDataRetriever = new MediaMetadataRetriever();
+        mediaMetaDataRetriever.setDataSource(musicPath);
+        return mediaMetaDataRetriever.getEmbeddedPicture();
     }
 }
