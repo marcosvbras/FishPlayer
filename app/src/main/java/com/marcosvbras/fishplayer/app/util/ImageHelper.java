@@ -63,25 +63,27 @@ public class ImageHelper {
 
     // Redimensiona um Bitmap de acordo com um tamamho máximo definido
     public static Bitmap resizeBitmap(Bitmap bitmapOriginal, int maxSize) {
-        int bitmapWidth = bitmapOriginal.getWidth();
-        int bitmapHeight = bitmapOriginal.getHeight();
+        if(bitmapOriginal != null) {
+            int bitmapWidth = bitmapOriginal.getWidth();
+            int bitmapHeight = bitmapOriginal.getHeight();
 
-        float bitmapRatio = (float)bitmapWidth / (float)bitmapHeight;
+            float bitmapRatio = (float)bitmapWidth / (float)bitmapHeight;
 
-        // Definindo se a imagem é horizontal ou vertical
-        boolean isLandscapeImage = bitmapRatio > 1 ? true : false;
+            // Definindo se a imagem é horizontal ou vertical
+            boolean isLandscapeImage = bitmapRatio > 1 ? true : false;
 
-        if(isLandscapeImage && bitmapWidth > maxSize) {
-            bitmapWidth = maxSize;
-            bitmapHeight = (int)(bitmapWidth / bitmapRatio);
-            return Bitmap.createScaledBitmap(bitmapOriginal, bitmapWidth, bitmapHeight, true);
-        } else if(!isLandscapeImage && bitmapHeight > maxSize) {
-            bitmapHeight = maxSize;
-            bitmapWidth = (int)(bitmapHeight * bitmapRatio);
-            return Bitmap.createScaledBitmap(bitmapOriginal, bitmapWidth, bitmapHeight, true);
-        } else {
-            return bitmapOriginal;
+            if(isLandscapeImage && bitmapWidth > maxSize) {
+                bitmapWidth = maxSize;
+                bitmapHeight = (int)(bitmapWidth / bitmapRatio);
+                bitmapOriginal =  Bitmap.createScaledBitmap(bitmapOriginal, bitmapWidth, bitmapHeight, true);
+            } else if(!isLandscapeImage && bitmapHeight > maxSize) {
+                bitmapHeight = maxSize;
+                bitmapWidth = (int)(bitmapHeight * bitmapRatio);
+                bitmapOriginal = Bitmap.createScaledBitmap(bitmapOriginal, bitmapWidth, bitmapHeight, true);
+            }
         }
+
+        return bitmapOriginal;
     }
 
     // Retorna um bitmap circular

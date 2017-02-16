@@ -21,6 +21,7 @@ import com.marcosvbras.fishplayer.app.adapter.AlbumAdapter;
 import com.marcosvbras.fishplayer.app.domain.Album;
 import com.marcosvbras.fishplayer.app.interfaces.OnRecyclerViewTouchListener;
 import com.marcosvbras.fishplayer.app.listener.RecyclerItemClickListener;
+import com.marcosvbras.fishplayer.app.util.AlbumHelper;
 import com.marcosvbras.fishplayer.app.util.MusicHelper;
 import com.marcosvbras.fishplayer.app.util.PermissionUtils;
 
@@ -73,7 +74,7 @@ public class AlbumsFragment extends Fragment implements OnRecyclerViewTouchListe
                             progressBar.setVisibility(View.VISIBLE);
                         }
                     });
-                    listAlbums = MusicHelper.discoverAlbums(activity, MediaStore.Audio.Albums.ALBUM);
+                    listAlbums = AlbumHelper.discoverAlbums(activity, MediaStore.Audio.Albums.ALBUM);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -100,7 +101,7 @@ public class AlbumsFragment extends Fragment implements OnRecyclerViewTouchListe
     }
 
     @Override
-    public void onItemClickListener(View view, int position) {
+    public void onItemClick(View view, int position) {
         Album album = albumAdapter.getItemAt(position);
         Intent intent = new Intent(getActivity(), AlbumActivity.class);
         Bundle bundle = new Bundle();
@@ -110,7 +111,7 @@ public class AlbumsFragment extends Fragment implements OnRecyclerViewTouchListe
     }
 
     @Override
-    public void onLongItemClickListener(View view, int position) {
+    public void onLongItemClick(View view, int position) {
 
     }
 }

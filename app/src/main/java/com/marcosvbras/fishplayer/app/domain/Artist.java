@@ -1,7 +1,9 @@
 package com.marcosvbras.fishplayer.app.domain;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 
 /**
  * Created by marcosvbras on 12/02/17.
@@ -23,24 +25,12 @@ public class Artist implements Parcelable {
         this.numberOfTracks = numberOfTracks;
     }
 
-    protected Artist(Parcel in) {
-        id = in.readLong();
-        name = in.readString();
-        numberOfAlbums = in.readInt();
-        numberOfTracks = in.readInt();
+    public Artist(Cursor cursor) {
+        id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Artists._ID));
+        name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
+        numberOfAlbums = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS));
+        numberOfTracks = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS));
     }
-
-    public static final Creator<Artist> CREATOR = new Creator<Artist>() {
-        @Override
-        public Artist createFromParcel(Parcel in) {
-            return new Artist(in);
-        }
-
-        @Override
-        public Artist[] newArray(int size) {
-            return new Artist[size];
-        }
-    };
 
     public long getId() {
         return id;
@@ -73,6 +63,29 @@ public class Artist implements Parcelable {
     public void setNumberOfTracks(int numberOfTracks) {
         this.numberOfTracks = numberOfTracks;
     }
+
+    /**
+     * Parcelable
+     * */
+
+    protected Artist(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+        numberOfAlbums = in.readInt();
+        numberOfTracks = in.readInt();
+    }
+
+    public static final Creator<Artist> CREATOR = new Creator<Artist>() {
+        @Override
+        public Artist createFromParcel(Parcel in) {
+            return new Artist(in);
+        }
+
+        @Override
+        public Artist[] newArray(int size) {
+            return new Artist[size];
+        }
+    };
 
     @Override
     public int describeContents() {

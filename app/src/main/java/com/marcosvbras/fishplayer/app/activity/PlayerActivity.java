@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -18,12 +16,12 @@ import android.widget.TextView;
 
 import com.marcosvbras.fishplayer.R;
 import com.marcosvbras.fishplayer.app.FishApplication;
-import com.marcosvbras.fishplayer.app.domain.Music;
+import com.marcosvbras.fishplayer.app.domain.SimpleMusic;
 import com.marcosvbras.fishplayer.app.interfaces.OnMusicProgressChangeListener;
 import com.marcosvbras.fishplayer.app.util.Constants;
 import com.marcosvbras.fishplayer.app.util.FishPlayer;
 import com.marcosvbras.fishplayer.app.util.ImageHelper;
-import com.marcosvbras.fishplayer.app.view.RoundedImageView;
+import com.marcosvbras.fishplayer.app.util.MusicHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +44,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
 
     // Another objects
     private FishPlayer fishPlayer;
-    private Music music;
+    private SimpleMusic simpleMusic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +89,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         Bundle bundle = getIntent().getExtras();
 
         if(bundle != null)
-            music = bundle.getParcelable(Constants.KEY_MUSIC);
+            simpleMusic = bundle.getParcelable(Constants.KEY_MUSIC);
 
         if(!hasPreviousMusic())
             controlButton(imageButtonPrevious, false);
@@ -119,25 +117,25 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                 // e o resto deve ser embaralhado
                 if(imageButtonShuffle.isSelected()) {
                     // Salvando a lista e o índice antigo
-                    FishApplication.oldListMusic = new ArrayList<>(FishApplication.currentListMusic);
+                    FishApplication.oldMusicList = new ArrayList<>(FishApplication.currentMusicList);
 
                     // Removendo a música atual e "embaralhando" o resto da lista
-                    FishApplication.currentListMusic.remove(FishApplication.currentMusicIndex);
-                    Collections.shuffle(FishApplication.currentListMusic);
+                    FishApplication.currentMusicList.remove(FishApplication.currentMusicIndex);
+                    Collections.shuffle(FishApplication.currentMusicList);
 
                     // Adicionando a música atual de volta ao início da lista embaralhada
-                    FishApplication.currentListMusic.add(0, music);
+                    FishApplication.currentMusicList.add(0, simpleMusic);
                     FishApplication.currentMusicIndex = 0;
                 } else { // Se não, o estado original da lista de músicas deve ser restaurado
-                    for(int i = 0; i < FishApplication.oldListMusic.size(); i++) {
-                        if(FishApplication.oldListMusic.get(i).getId() == music.getId()) {
+                    for(int i = 0; i < FishApplication.oldMusicList.size(); i++) {
+                        if(FishApplication.oldMusicList.get(i).getId() == simpleMusic.getId()) {
                             FishApplication.currentMusicIndex = i;
                             break;
                         }
                     }
 
-                    FishApplication.currentListMusic = new ArrayList<>(FishApplication.oldListMusic);
-                    FishApplication.oldListMusic = null;
+                    FishApplication.currentMusicList = new ArrayList<>(FishApplication.oldMusicList);
+                    FishApplication.oldMusicList = null;
                 }
             }
         };
@@ -172,45 +170,48 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     }
 
     /**
-     * Update all music informations on the Activity
+     * Update all simpleMusic informations on the Activity
      * */
     private void showMusicInfo() {
-        if(music.getTitle() != null && !music.getTitle().equals("") && !music.getTitle().equals("0"))
-            textViewTitle.setText(music.getTitle());
+        if(simpleMusic.getTitle() != null && !simpleMusic.getTitle().equals("") && !simpleMusic.getTitle().equals("0"))
+            textViewTitle.setText(simpleMusic.getTitle());
         else
             textViewTitle.setText(getString(R.string.unknown_title));
 
         String text = null;
 
-        if(music.getArtist() != null && !music.getArtist().equals("") && !music.getArtist().equals("0"))
-            text = music.getArtist();
+        if(simpleMusic.getArtist() != null && !simpleMusic.getArtist().equals("") && !simpleMusic.getArtist().equals("0"))
+            text = simpleMusic.getArtist();
         else
             text = getString(R.string.unknown_artist);
 
-        if(music.getAlbum() != null && !music.getArtist().equals("") && !music.getAlbum().equals("0"))
-            text += " - " + music.getAlbum();
+        if(simpleMusic.getAlbum() != null && !simpleMusic.getArtist().equals("") && !simpleMusic.getAlbum().equals("0"))
+            text += " - " + simpleMusic.getAlbum();
         else
             text += " - " + getString(R.string.unknown_album);
 
         textViewArtist.setText(text);
 
         // Image cover
-        if(music.getAlbumArtPath() == null || music.getAlbumArtPath().equals("")) {
-        } else {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final Bitmap bitmap = ImageHelper.resizeBitmap(
-                            BitmapFactory.decodeByteArray(music.getFilePicture(), 0, music.getFilePicture().length), 280);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            imageViewArt.setImageBitmap(bitmap);
-                        }
-                    });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final byte[] data = MusicHelper.getSpecificFilePicture(simpleMusic.getMusicPath());
+
+                if(data != null && data.length > 0) {
+                    final Bitmap bitmap = ImageHelper.resizeBitmap(BitmapFactory.decodeByteArray(data, 0, data.length), 280);
+
+                    if(bitmap != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                imageViewArt.setImageBitmap(bitmap);
+                            }
+                        });
+                    }
                 }
-            }).start();
-        }
+            }
+        }).start();
 
         // Music duration
         textViewDurationLength.setText(
@@ -225,7 +226,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                music = FishApplication.currentListMusic.get(--FishApplication.currentMusicIndex);
+                simpleMusic = FishApplication.currentMusicList.get(--FishApplication.currentMusicIndex);
                 fishPlayer.prepareForNewMusic();
                 playMusic();
                 showMusicInfo();
@@ -242,7 +243,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                music = FishApplication.currentListMusic.get(++FishApplication.currentMusicIndex);
+                simpleMusic = FishApplication.currentMusicList.get(++FishApplication.currentMusicIndex);
                 fishPlayer.prepareForNewMusic();
                 playMusic();
                 showMusicInfo();
@@ -256,7 +257,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     }
 
     private boolean hasNextMusic() {
-        return FishApplication.currentListMusic.size() - 1 > FishApplication.currentMusicIndex;
+        return FishApplication.currentMusicList.size() - 1 > FishApplication.currentMusicIndex;
     }
 
     private boolean hasPreviousMusic() {
@@ -283,7 +284,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             fishPlayer.pause();
         } else {
             imageButtonPlay.setImageResource(R.drawable.white_pause_250);
-            fishPlayer.play(music.getMusicPath());
+            fishPlayer.play(simpleMusic.getMusicPath());
         }
     }
 
@@ -295,11 +296,11 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             // Repete a música caso o botão esteja selecionado
             imageButtonPlay.setImageResource(R.drawable.white_pause_250);
             fishPlayer.reset();
-            fishPlayer.play(music.getMusicPath());
+            fishPlayer.play(simpleMusic.getMusicPath());
         } else if(hasNextMusic()) {
             // Reproduz a próxima música caso exista alguma música na fila
             FishApplication.currentMusicIndex++;
-            music = FishApplication.currentListMusic.get(FishApplication.currentMusicIndex);
+            simpleMusic = FishApplication.currentMusicList.get(FishApplication.currentMusicIndex);
             fishPlayer.prepareForNewMusic();
             playMusic();
             showMusicInfo();

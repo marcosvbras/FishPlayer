@@ -5,7 +5,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.marcosvbras.fishplayer.R;
 import com.marcosvbras.fishplayer.app.adapter.TabsAdapter;
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     // Views
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
+    private SearchView searchView;
 
     // Another Objects
     private List<String> listTitles;
@@ -60,5 +64,48 @@ public class MainActivity extends AppCompatActivity {
         slidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.colorAccent), ContextCompat.getColor(this, R.color.colorAccent));
         slidingTabLayout.setTitleColor(ContextCompat.getColor(this, android.R.color.white));
         slidingTabLayout.setViewPager(viewPager);
+        slidingTabLayout.setOnPageChangeListener(onPageChangeListener());
+    }
+
+    private ViewPager.OnPageChangeListener onPageChangeListener() {
+        return new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        };
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_default, menu);
+        MenuItem menuItemSearchView = menu.findItem(R.id.menu_item_search);
+        searchView = (SearchView)menuItemSearchView.getActionView();
+        searchView.setOnQueryTextListener(onQueryTextListener());
+        return true;
+    }
+
+    private SearchView.OnQueryTextListener onQueryTextListener() {
+        return new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        };
     }
 }

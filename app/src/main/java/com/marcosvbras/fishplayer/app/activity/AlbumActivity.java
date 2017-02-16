@@ -2,7 +2,6 @@ package com.marcosvbras.fishplayer.app.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,13 +18,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marcosvbras.fishplayer.R;
 import com.marcosvbras.fishplayer.app.FishApplication;
 import com.marcosvbras.fishplayer.app.adapter.MusicAdapter;
 import com.marcosvbras.fishplayer.app.domain.Album;
 import com.marcosvbras.fishplayer.app.domain.Music;
+import com.marcosvbras.fishplayer.app.domain.SimpleMusic;
 import com.marcosvbras.fishplayer.app.fragments.AlbumsFragment;
 import com.marcosvbras.fishplayer.app.interfaces.OnRecyclerViewTouchListener;
 import com.marcosvbras.fishplayer.app.listener.RecyclerItemClickListener;
@@ -46,7 +45,7 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
 
     // Another Objects
     private Album album;
-    private List<Music> listMusics;
+    private List<SimpleMusic> listSimpleMusic;
     private MusicAdapter musicAdapter;
 
     @Override
@@ -77,12 +76,12 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Music music = musicAdapter.getMusicAt(0);
-                FishApplication.currentListMusic = listMusics;
+                SimpleMusic simpleMusic = musicAdapter.getMusicAt(0);
+                FishApplication.currentMusicList = listSimpleMusic;
                 FishApplication.currentMusicIndex = 0;
                 Intent intent = new Intent(getBaseContext(), PlayerActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable(Constants.KEY_MUSIC, music);
+                bundle.putParcelable(Constants.KEY_MUSIC, simpleMusic);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -142,7 +141,7 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
                             //progressBar.setVisibility(View.VISIBLE);
                         }
                     });
-                    listMusics = MusicHelper.loadListByAlbumId(context, album.getId(), MediaStore.Audio.Media.TITLE);
+                    listSimpleMusic = MusicHelper.discoverSimpleMusicsByAlbumId(context, album.getId(), MediaStore.Audio.Media.TITLE);
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -159,26 +158,26 @@ public class AlbumActivity extends AppCompatActivity implements OnRecyclerViewTo
     }
 
     private void showList() {
-        if(listMusics != null && listMusics.size() > 0) {
-            musicAdapter = new MusicAdapter(this, listMusics);
+        if(listSimpleMusic != null && listSimpleMusic.size() > 0) {
+            musicAdapter = new MusicAdapter(this, listSimpleMusic);
             recyclerView.setAdapter(musicAdapter);
         }
     }
 
     @Override
-    public void onItemClickListener(View view, int position) {
-        Music music = musicAdapter.getMusicAt(position);
-        FishApplication.currentListMusic = listMusics;
+    public void onItemClick(View view, int position) {
+        SimpleMusic simpleMusic = musicAdapter.getMusicAt(position);
+        FishApplication.currentMusicList = listSimpleMusic;
         FishApplication.currentMusicIndex = position;
         Intent intent = new Intent(this, PlayerActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_MUSIC, music);
+        bundle.putParcelable(Constants.KEY_MUSIC, simpleMusic);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     @Override
-    public void onLongItemClickListener(View view, int position) {
+    public void onLongItemClick(View view, int position) {
 
     }
 }

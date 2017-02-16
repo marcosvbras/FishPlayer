@@ -1,7 +1,9 @@
 package com.marcosvbras.fishplayer.app.domain;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 
 /**
  * Created by marcosvbras on 12/02/17.
@@ -27,26 +29,14 @@ public class Album implements Parcelable {
         this.numberOfSongs = numberOfSongs;
     }
 
-    protected Album(Parcel in) {
-        id = in.readLong();
-        albumArtPath = in.readString();
-        artist = in.readString();
-        name = in.readString();
-        firstYear = in.readInt();
-        numberOfSongs = in.readInt();
+    public Album(Cursor cursor) {
+        id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
+        name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
+        artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
+        firstYear = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR));
+        numberOfSongs = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
+        albumArtPath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
     }
-
-    public static final Creator<Album> CREATOR = new Creator<Album>() {
-        @Override
-        public Album createFromParcel(Parcel in) {
-            return new Album(in);
-        }
-
-        @Override
-        public Album[] newArray(int size) {
-            return new Album[size];
-        }
-    };
 
     public long getId() {
         return id;
@@ -95,6 +85,31 @@ public class Album implements Parcelable {
     public void setNumberOfSongs(int numberOfSongs) {
         this.numberOfSongs = numberOfSongs;
     }
+
+    /**
+     * Parcelable
+     * */
+
+    protected Album(Parcel in) {
+        id = in.readLong();
+        albumArtPath = in.readString();
+        artist = in.readString();
+        name = in.readString();
+        firstYear = in.readInt();
+        numberOfSongs = in.readInt();
+    }
+
+    public static final Creator<Album> CREATOR = new Creator<Album>() {
+        @Override
+        public Album createFromParcel(Parcel in) {
+            return new Album(in);
+        }
+
+        @Override
+        public Album[] newArray(int size) {
+            return new Album[size];
+        }
+    };
 
     @Override
     public int describeContents() {

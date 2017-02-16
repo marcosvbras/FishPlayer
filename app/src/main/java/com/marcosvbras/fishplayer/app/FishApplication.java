@@ -2,7 +2,7 @@ package com.marcosvbras.fishplayer.app;
 
 import android.app.Application;
 
-import com.marcosvbras.fishplayer.app.domain.Music;
+import com.marcosvbras.fishplayer.app.domain.SimpleMusic;
 
 import java.util.List;
 
@@ -12,9 +12,8 @@ import java.util.List;
 
 public class FishApplication extends Application {
 
-    public static List<Music> oldListMusic;
-    public static List<Music> currentListMusic;
-
+    public static List<SimpleMusic> oldMusicList;
+    public static List<SimpleMusic> currentMusicList;
     public static int currentMusicIndex;
 
     @Override

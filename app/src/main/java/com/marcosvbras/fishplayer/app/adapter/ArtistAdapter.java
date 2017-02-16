@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.marcosvbras.fishplayer.R;
 import com.marcosvbras.fishplayer.app.domain.Artist;
+import com.marcosvbras.fishplayer.app.util.Animations;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
 
     private List<Artist> listArtist;
     private Context context;
+    private int lastLoadedPosition;
 
     public ArtistAdapter(List<Artist> listArtist, Context context) {
         this.listArtist = listArtist;
@@ -44,6 +47,17 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
         myViewHolder.textViewNumberAlbums.setText(artist.getNumberOfAlbums() + " " +
                 (artist.getNumberOfAlbums() > 1 ? context.getString(R.string.albums_item) :
                         context.getString(R.string.album)));
+
+        if(position > lastLoadedPosition) {
+            Animations.setFadeInAnimation(myViewHolder.container, context, 1200);
+            lastLoadedPosition = position;
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(MyViewHolder myViewHolder) {
+        super.onViewDetachedFromWindow(myViewHolder);
+        myViewHolder.container.clearAnimation();
     }
 
     @Override
@@ -62,12 +76,14 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout container;
         TextView textViewArtist;
         TextView textViewNumberMusics;
         TextView textViewNumberAlbums;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            container = (LinearLayout)itemView.findViewById(R.id.container);
             textViewArtist = (TextView)itemView.findViewById(R.id.text_view_artist);
             textViewNumberMusics = (TextView)itemView.findViewById(R.id.text_view_number_musics);
             textViewNumberAlbums = (TextView)itemView.findViewById(R.id.text_view_number_albums);

@@ -1,8 +1,9 @@
 package com.marcosvbras.fishplayer.app.domain;
 
-import android.graphics.Bitmap;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 
 /**
  * Created by marcosvbras on 07/02/17.
@@ -10,19 +11,14 @@ import android.os.Parcelable;
 
 public class Music implements Parcelable {
 
-    private long albumId;
-    private long artistId;
     private long dataAdded; // in seconds
     private long dataModified;
     private long id;
     private long sizeFile; // in bytes
-    private int duration;
+    private long duration;
     private int trackNumber;
     private int year;
-    private String album;
-    private String artist;
     private String composer;
-    private String albumArtPath;
     private String fileName;
     private String mimeType;
     private String musicPath;
@@ -32,31 +28,40 @@ public class Music implements Parcelable {
     private boolean isNotification;
     private boolean isPodcast;
     private boolean isRingtone;
-    private byte[] filePicture;
+    private Album album;
+    private Artist artist;
 
     //BitmapFactory.decodeByteArray(data, 0, data.length)
 
-    public Music() { }
+    public Music() {}
+
+    public Music(Cursor cursor, Artist artist, Album album) {
+        if(cursor != null) {
+            musicPath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+            id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+            title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+            duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+            composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
+            dataAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
+            dataModified = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
+            year = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
+            sizeFile = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+            fileName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+            isAlarm = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_ALARM)) == 1 ? true : false;
+            isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)) == 1 ? true : false;
+            isNotification = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_NOTIFICATION)) == 1 ? true : false;
+            isPodcast = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_PODCAST)) == 1 ? true : false;
+            isRingtone = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_RINGTONE)) == 1 ? true : false;
+            trackNumber = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
+            mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
+            this.artist = artist;
+            this.album = album;
+        }
+    }
 
     /**
      * Getters and Setters
      * */
-
-    public long getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(long albumId) {
-        this.albumId = albumId;
-    }
-
-    public long getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(long artistId) {
-        this.artistId = artistId;
-    }
 
     public long getDataAdded() {
         return dataAdded;
@@ -90,11 +95,11 @@ public class Music implements Parcelable {
         this.sizeFile = sizeFile;
     }
 
-    public int getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
@@ -114,36 +119,12 @@ public class Music implements Parcelable {
         this.year = year;
     }
 
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
     public String getComposer() {
         return composer;
     }
 
     public void setComposer(String composer) {
         this.composer = composer;
-    }
-
-    public String getAlbumArtPath() {
-        return albumArtPath;
-    }
-
-    public void setAlbumArtPath(String albumArtPath) {
-        this.albumArtPath = albumArtPath;
     }
 
     public String getFileName() {
@@ -218,17 +199,47 @@ public class Music implements Parcelable {
         isRingtone = ringtone;
     }
 
-    public byte[] getFilePicture() {
-        return filePicture;
+    public Album getAlbum() {
+        return album;
     }
 
-    public void setFilePicture(byte[] filePicture) {
-        this.filePicture = filePicture;
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
+    public Artist getArtist() {
+        return artist;
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 
     /**
      * Parcelable
      * */
+
+    protected Music(Parcel in) {
+        dataAdded = in.readLong();
+        dataModified = in.readLong();
+        id = in.readLong();
+        sizeFile = in.readLong();
+        duration = in.readLong();
+        trackNumber = in.readInt();
+        year = in.readInt();
+        composer = in.readString();
+        fileName = in.readString();
+        mimeType = in.readString();
+        musicPath = in.readString();
+        title = in.readString();
+        isAlarm = in.readByte() != 0;
+        isMusic = in.readByte() != 0;
+        isNotification = in.readByte() != 0;
+        isPodcast = in.readByte() != 0;
+        isRingtone = in.readByte() != 0;
+        album = in.readParcelable(Album.class.getClassLoader());
+        artist = in.readParcelable(Artist.class.getClassLoader());
+    }
 
     public static final Creator<Music> CREATOR = new Creator<Music>() {
         @Override
@@ -242,33 +253,6 @@ public class Music implements Parcelable {
         }
     };
 
-    protected Music(Parcel in) {
-        albumId = in.readLong();
-        artistId = in.readLong();
-        dataAdded = in.readLong();
-        dataModified = in.readLong();
-        id = in.readLong();
-        sizeFile = in.readLong();
-        duration = in.readInt();
-        trackNumber = in.readInt();
-        year = in.readInt();
-        album = in.readString();
-        artist = in.readString();
-        composer = in.readString();
-        albumArtPath = in.readString();
-        fileName = in.readString();
-        mimeType = in.readString();
-        musicPath = in.readString();
-        title = in.readString();
-        isAlarm = in.readInt() == 1 ? true : false;
-        isMusic = in.readInt() == 1 ? true : false;
-        isNotification = in.readInt() == 1 ? true : false;
-        isPodcast = in.readInt() == 1 ? true : false;
-        isRingtone = in.readInt() == 1 ? true : false;
-        filePicture = new byte[in.readInt()];
-        in.readByteArray(filePicture);
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -276,19 +260,14 @@ public class Music implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(albumId);
-        dest.writeLong(artistId);
         dest.writeLong(dataAdded);
         dest.writeLong(dataModified);
+        dest.writeLong(duration);
         dest.writeLong(id);
         dest.writeLong(sizeFile);
-        dest.writeInt(duration);
         dest.writeInt(trackNumber);
         dest.writeInt(year);
-        dest.writeString(album);
-        dest.writeString(artist);
         dest.writeString(composer);
-        dest.writeString(albumArtPath);
         dest.writeString(fileName);
         dest.writeString(mimeType);
         dest.writeString(musicPath);
@@ -298,7 +277,7 @@ public class Music implements Parcelable {
         dest.writeInt(isNotification ? 1 : 0);
         dest.writeInt(isPodcast ? 1 : 0);
         dest.writeInt(isRingtone ? 1 : 0);
-        dest.writeInt(filePicture.length);
-        dest.writeByteArray(filePicture);
+        dest.writeParcelable(album, flags);
+        dest.writeParcelable(artist, flags);
     }
 }

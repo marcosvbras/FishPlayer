@@ -19,7 +19,7 @@ import com.marcosvbras.fishplayer.R;
 import com.marcosvbras.fishplayer.app.FishApplication;
 import com.marcosvbras.fishplayer.app.activity.PlayerActivity;
 import com.marcosvbras.fishplayer.app.adapter.MusicAdapter;
-import com.marcosvbras.fishplayer.app.domain.Music;
+import com.marcosvbras.fishplayer.app.domain.SimpleMusic;
 import com.marcosvbras.fishplayer.app.interfaces.OnRecyclerViewTouchListener;
 import com.marcosvbras.fishplayer.app.listener.RecyclerItemClickListener;
 import com.marcosvbras.fishplayer.app.util.Constants;
@@ -40,7 +40,7 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
     // Another objects
     private MusicAdapter musicAdapter;
     private ProgressBar progressBar;
-    private List<Music> listMusic;
+    private List<SimpleMusic> listSimpleMusic;
 
     @Nullable
     @Override
@@ -74,7 +74,7 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
                             progressBar.setVisibility(View.VISIBLE);
                         }
                     });
-                    listMusic = MusicHelper.discoverSongs(activity, MediaStore.Audio.Media.TITLE);
+                    listSimpleMusic = MusicHelper.discoverSimpleMusics(activity, MediaStore.Audio.Media.TITLE);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -91,8 +91,8 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
     }
 
     private void showList() {
-        if(listMusic != null && listMusic.size() > 0) {
-            musicAdapter = new MusicAdapter(getActivity(), listMusic);
+        if(listSimpleMusic != null && listSimpleMusic.size() > 0) {
+            musicAdapter = new MusicAdapter(getActivity(), listSimpleMusic);
             recyclerView.setAdapter(musicAdapter);
         } else {
             ((TextView)getView().findViewById(R.id.text_view_message)).setText(getString(R.string.no_music_found));
@@ -101,19 +101,19 @@ public class MusicsFragment extends Fragment implements OnRecyclerViewTouchListe
     }
 
     @Override
-    public void onItemClickListener(View view, int position) {
-        Music music = musicAdapter.getMusicAt(position);
-        FishApplication.currentListMusic = listMusic;
+    public void onItemClick(View view, int position) {
+        SimpleMusic simpleMusic = musicAdapter.getMusicAt(position);
+        FishApplication.currentMusicList = listSimpleMusic;
         FishApplication.currentMusicIndex = position;
         Intent intent = new Intent(getContext(), PlayerActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_MUSIC, music);
+        bundle.putParcelable(Constants.KEY_MUSIC, simpleMusic);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     @Override
-    public void onLongItemClickListener(View view, int position) {
+    public void onLongItemClick(View view, int position) {
 
     }
 }

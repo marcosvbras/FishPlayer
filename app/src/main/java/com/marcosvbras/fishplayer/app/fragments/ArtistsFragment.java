@@ -20,6 +20,7 @@ import com.marcosvbras.fishplayer.app.adapter.ArtistAdapter;
 import com.marcosvbras.fishplayer.app.domain.Artist;
 import com.marcosvbras.fishplayer.app.interfaces.OnRecyclerViewTouchListener;
 import com.marcosvbras.fishplayer.app.listener.RecyclerItemClickListener;
+import com.marcosvbras.fishplayer.app.util.ArtistHelper;
 import com.marcosvbras.fishplayer.app.util.MusicHelper;
 import com.marcosvbras.fishplayer.app.util.PermissionUtils;
 
@@ -71,7 +72,7 @@ public class ArtistsFragment extends Fragment implements OnRecyclerViewTouchList
                             progressBar.setVisibility(View.VISIBLE);
                         }
                     });
-                    listArtist = MusicHelper.discoverArtists(activity, MediaStore.Audio.Artists.ARTIST);
+                    listArtist = ArtistHelper.discoverArtists(activity, MediaStore.Audio.Artists.ARTIST);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -99,12 +100,12 @@ public class ArtistsFragment extends Fragment implements OnRecyclerViewTouchList
     }
 
     @Override
-    public void onItemClickListener(View view, int position) {
+    public void onItemClick(View view, int position) {
 
     }
 
     @Override
-    public void onLongItemClickListener(View view, int position) {
+    public void onLongItemClick(View view, int position) {
 
     }
 }

@@ -7,11 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.marcosvbras.fishplayer.R;
 import com.marcosvbras.fishplayer.app.domain.Album;
+import com.marcosvbras.fishplayer.app.util.Animations;
 import com.marcosvbras.fishplayer.app.util.ImageHelper;
 
 import java.util.HashMap;
@@ -26,6 +28,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     private HashMap<Integer, Bitmap> hashMapImage;
     private List<Album> listAlbums;
     private Activity context;
+    private int lastLoadedPosition;
 
     public AlbumAdapter(List<Album> listAlbums, Activity context) {
         this.listAlbums = listAlbums;
@@ -56,6 +59,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
             myViewHolder.textViewAlbum.setText(album.getName());
         else
             myViewHolder.textViewAlbum.setText(context.getString(R.string.unknown_album));
+
+        if(position > lastLoadedPosition) {
+            Animations.setFadeInAnimation(myViewHolder.container, context, 1200);
+            lastLoadedPosition = position;
+        }
     }
 
     private void loadImage(final ImageView imageView, final int position, final String albumArtPath) {
@@ -63,18 +71,27 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
             @Override
             public void run() {
                 final Bitmap bitmap = ImageHelper.resizeBitmap(BitmapFactory.decodeFile(albumArtPath), 140);
-                hashMapImage.put(position, bitmap);
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        imageView.setImageBitmap(bitmap);
-                    }
-                });
+
+                if(bitmap != null) {
+                    hashMapImage.put(position, bitmap);
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+                }
             }
         }).start();
     }
 
     public Album getItemAt(int position) { return listAlbums.get(position); }
+
+    @Override
+    public void onViewDetachedFromWindow(MyViewHolder myViewHolder) {
+        super.onViewDetachedFromWindow(myViewHolder);
+        myViewHolder.container.clearAnimation();
+    }
 
     @Override
     public int getItemCount() {
@@ -92,11 +109,13 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        FrameLayout container;
         ImageView imageViewArt;
         TextView textViewAlbum;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            container = (FrameLayout)itemView.findViewById(R.id.container);
             imageViewArt = (ImageView)itemView.findViewById(R.id.image_view_art);
             textViewAlbum = (TextView)itemView.findViewById(R.id.text_view_album);
         }

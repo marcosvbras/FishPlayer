@@ -31,7 +31,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 View clickedView = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
 
                 if(clickedView != null && onRecyclerViewTouchListener != null)
-                    onRecyclerViewTouchListener.onItemClickListener(clickedView, recyclerView.getChildAdapterPosition(clickedView));
+                    onRecyclerViewTouchListener.onItemClick(clickedView, recyclerView.getChildAdapterPosition(clickedView));
 
                 return true;
             }
@@ -41,7 +41,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 View clickedView = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
 
                 if(clickedView != null && onRecyclerViewTouchListener != null)
-                    onRecyclerViewTouchListener.onLongItemClickListener(clickedView, recyclerView.getChildAdapterPosition(clickedView));
+                    onRecyclerViewTouchListener.onLongItemClick(clickedView, recyclerView.getChildAdapterPosition(clickedView));
             }
         };
     }
