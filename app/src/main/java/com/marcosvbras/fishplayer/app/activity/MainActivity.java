@@ -1,5 +1,6 @@
 package com.marcosvbras.fishplayer.app.activity;
 
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -31,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     // Another Objects
     private List<String> listTitles;
     private List<Fragment> listFragments;
+    private int pageSelected;
+    private MusicsFragment musicsFragment;
+    private ArtistsFragment artistsFragment;
+    private AlbumsFragment albumsFragment;
+    private PlaylistsFragment playlistsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +54,14 @@ public class MainActivity extends AppCompatActivity {
         listTitles.add(getString(R.string.playlists));
 
         listFragments = new ArrayList<>();
-        listFragments.add(new MusicsFragment());
-        listFragments.add(new ArtistsFragment());
-        listFragments.add(new AlbumsFragment());
-        listFragments.add(new PlaylistsFragment());
+        musicsFragment = new MusicsFragment();
+        artistsFragment = new ArtistsFragment();
+        albumsFragment = new AlbumsFragment();
+        playlistsFragment = new PlaylistsFragment();
+        listFragments.add(musicsFragment);
+        listFragments.add(artistsFragment);
+        listFragments.add(albumsFragment);
+        listFragments.add(playlistsFragment);
     }
 
     private void loadComponents() {
@@ -71,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
         return new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                pageSelected = position;
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                pageSelected = position;
             }
 
             @Override
@@ -99,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
         return new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                ((ArtistsFragment)listFragments.get(pageSelected)).updateSearch(query);
+                return true;
             }
 
             @Override

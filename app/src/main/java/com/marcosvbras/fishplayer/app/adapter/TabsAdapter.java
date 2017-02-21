@@ -18,6 +18,8 @@ public class TabsAdapter extends FragmentPagerAdapter {
     private List<Fragment> listFragment;
     private List<String> listTitles;
 
+    public List<Fragment> getListFragment() { return listFragment; }
+
     public TabsAdapter(FragmentManager fragmentManager, List<Fragment> listFragment, List<String> listTitles) {
         super(fragmentManager);
         this.listFragment = listFragment;

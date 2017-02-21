@@ -29,6 +29,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     private List<Album> listAlbums;
     private Activity context;
     private int lastLoadedPosition;
+    private int width;
 
     public AlbumAdapter(List<Album> listAlbums, Activity context) {
         this.listAlbums = listAlbums;
@@ -39,8 +40,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false);
-        view.setMinimumWidth(parent.getMeasuredWidth() / 2);
-        view.setMinimumHeight(parent.getMeasuredWidth() / 2);
+        width = parent.getMeasuredWidth() / 2;
+        view.setMinimumWidth(width);
+        view.setMinimumHeight(width);
         return new MyViewHolder(view);
     }
 
@@ -70,7 +72,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Bitmap bitmap = ImageHelper.resizeBitmap(BitmapFactory.decodeFile(albumArtPath), 140);
+                final Bitmap bitmap = ImageHelper.resizeBitmap(BitmapFactory.decodeFile(albumArtPath), width);
 
                 if(bitmap != null) {
                     hashMapImage.put(position, bitmap);

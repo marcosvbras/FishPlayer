@@ -99,6 +99,10 @@ public class ArtistsFragment extends Fragment implements OnRecyclerViewTouchList
         }
     }
 
+    public void updateSearch(String query) {
+        artistAdapter.getFilter().filter(query);
+    }
+
     @Override
     public void onItemClick(View view, int position) {
 

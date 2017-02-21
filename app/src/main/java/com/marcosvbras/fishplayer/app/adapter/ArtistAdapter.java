@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,7 +21,7 @@ import java.util.List;
  * Created by marcosvbras on 12/02/17.
  */
 
-public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHolder> {
+public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHolder> implements Filterable {
 
     private List<Artist> listArtist;
     private Context context;
@@ -73,6 +75,29 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    @Override
+    public Filter getFilter() {
+        final Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults filterResults = new FilterResults();
+
+                if(constraint != null && !constraint.equals("")) {
+
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            }
+        };
+
+        return filter;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
