@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.marcosvbras.fishplayer.R;
 import com.marcosvbras.fishplayer.app.domain.Album;
 import com.marcosvbras.fishplayer.app.util.Animations;
-import com.marcosvbras.fishplayer.app.util.ImageHelper;
+import com.marcosvbras.fishplayer.app.util.ImageResizeUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +25,6 @@ import java.util.List;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder> {
 
-    private HashMap<Integer, Bitmap> hashMapImage;
     private List<Album> listAlbums;
     private Activity context;
     private int lastLoadedPosition;
@@ -34,7 +33,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     public AlbumAdapter(List<Album> listAlbums, Activity context) {
         this.listAlbums = listAlbums;
         this.context = context;
-        hashMapImage = new HashMap<>();
+        setHasStableIds(true);
     }
 
     @Override
@@ -50,12 +49,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         Album album = listAlbums.get(position);
 
-        if(album.getAlbumArtPath() != null && !album.getAlbumArtPath().equals("")) {
-            if(hashMapImage.containsKey(position))
-                myViewHolder.imageViewArt.setImageBitmap(hashMapImage.get(position));
-            else
-                loadImage(myViewHolder.imageViewArt, position, album.getAlbumArtPath());
-        }
+        if(album.getAlbumArtPath() != null && !album.getAlbumArtPath().equals(""))
+            loadImage(myViewHolder.imageViewArt, position, album.getAlbumArtPath());
 
         if(album.getName() != null && !album.getName().equals("") && !album.getName().equals("0"))
             myViewHolder.textViewAlbum.setText(album.getName());
@@ -72,17 +67,13 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Bitmap bitmap = ImageHelper.resizeBitmap(BitmapFactory.decodeFile(albumArtPath), width);
-
-                if(bitmap != null) {
-                    hashMapImage.put(position, bitmap);
-                    context.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            imageView.setImageBitmap(bitmap);
-                        }
-                    });
-                }
+                final Bitmap bitmap = ImageResizeUtils.resizeBitmap(BitmapFactory.decodeFile(albumArtPath), width);
+                context.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                });
             }
         }).start();
     }
@@ -110,10 +101,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         return position;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        FrameLayout container;
-        ImageView imageViewArt;
-        TextView textViewAlbum;
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        public FrameLayout container;
+        public ImageView imageViewArt;
+        public TextView textViewAlbum;
 
         public MyViewHolder(View itemView) {
             super(itemView);

@@ -20,7 +20,7 @@ import com.marcosvbras.fishplayer.app.domain.SimpleMusic;
 import com.marcosvbras.fishplayer.app.interfaces.OnMusicProgressChangeListener;
 import com.marcosvbras.fishplayer.app.util.Constants;
 import com.marcosvbras.fishplayer.app.util.FishPlayer;
-import com.marcosvbras.fishplayer.app.util.ImageHelper;
+import com.marcosvbras.fishplayer.app.util.ImageResizeUtils;
 import com.marcosvbras.fishplayer.app.util.MusicHelper;
 
 import java.util.ArrayList;
@@ -199,7 +199,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                 final byte[] data = MusicHelper.getSpecificFilePicture(simpleMusic.getMusicPath());
 
                 if(data != null && data.length > 0) {
-                    final Bitmap bitmap = ImageHelper.resizeBitmap(BitmapFactory.decodeByteArray(data, 0, data.length), 280);
+                    final Bitmap bitmap = ImageResizeUtils.resizeBitmap(BitmapFactory.decodeByteArray(data, 0, data.length), 280);
 
                     if(bitmap != null) {
                         runOnUiThread(new Runnable() {

@@ -14,10 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.marcosvbras.fishplayer.R;
-import com.marcosvbras.fishplayer.app.domain.Music;
 import com.marcosvbras.fishplayer.app.domain.SimpleMusic;
 import com.marcosvbras.fishplayer.app.util.Animations;
-import com.marcosvbras.fishplayer.app.util.ImageHelper;
+import com.marcosvbras.fishplayer.app.util.ImageResizeUtils;
 import com.marcosvbras.fishplayer.app.util.MusicHelper;
 
 import java.util.HashMap;
@@ -32,13 +31,12 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
     private Activity activity;
     private List<SimpleMusic> listSimpleMusic;
-    private HashMap<Integer, Bitmap> hashMapImage;
     private int lastLoadedPosition;
 
     public MusicAdapter(Activity activity, List<SimpleMusic> listSimpleMusic) {
         this.activity = activity;
         this.listSimpleMusic = listSimpleMusic;
-        hashMapImage = new HashMap<>();
+        setHasStableIds(true);
     }
 
     @Override
@@ -52,10 +50,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final SimpleMusic simpleMusic = listSimpleMusic.get(position);
 
-        if(hashMapImage.containsKey(position))
-            myViewHolder.imageViewCover.setImageBitmap(hashMapImage.get(position));
-        else
-            loadImage(myViewHolder.imageViewCover, simpleMusic.getMusicPath(), position);
+        loadImage(myViewHolder.imageViewCover, simpleMusic.getMusicPath(), position);
 
         // Title
         if(simpleMusic.getTitle() != null && !simpleMusic.getTitle().equals("") && !simpleMusic.getTitle().equals("0"))
@@ -97,20 +92,16 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                 final byte[] data = MusicHelper.getSpecificFilePicture(musicPath);
 
                 if(data != null && data.length > 0) {
-                    final Bitmap bitmap = ImageHelper.resizeBitmap(
+                    final Bitmap bitmap = ImageResizeUtils.resizeBitmap(
                             BitmapFactory.decodeByteArray(data, 0, data.length),
                             140);
 
-                    if(bitmap != null) {
-                        hashMapImage.put(position, bitmap);
-
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView.setImageBitmap(bitmap);
-                            }
-                        });
-                    }
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
                 }
             }
         }).start();
